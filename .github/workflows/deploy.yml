@@ -1,0 +1,29 @@
+name: Deploy IAM Infrastructure
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run IAM Setup Script
+        run: |
+          chmod +x setup-iam.sh
+          ./setup-iam.sh
+
+      - name: Run Cleanup Script
+        run: |
+          chmod +x cleanup.sh
+          ./cleanup.sh
